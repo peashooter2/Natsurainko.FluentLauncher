@@ -89,27 +89,20 @@ jobs:
           # Move .msix for upload to artifacts
           mv ${{ env.Packages_Directory }}\*\*.msix "$packageName.msix"
 
+      - name: test
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-${{ matrix.architecture }}
+          path: obj\${{ matrix.architecture }}\Debug\net7.0\
+
+      - name: test2
+        uses: actions/upload-artifact@v4
+        with:
+          name: test2-${{ matrix.architecture }}
+          path: obj\${{ matrix.architecture }}\Debug\net8.0\
       - name: Upload .msix to artifacts
         if: ${{ inputs.create_package }}
         uses: actions/upload-artifact@v4
         with:
           name: msix-${{ matrix.architecture }}
           path: ${{ steps.preparation.outputs.packageName }}.msix
-
-      - name: test
-        uses: actions/upload-artifact@v4
-        with:
-          name: test
-          path: bin\${{ matrix.architecture }}\Debug\net7.0\
-
-      - name: test2
-        uses: actions/upload-artifact@v4
-        with:
-          name: test2
-          path: bin\${{ matrix.architecture }}\Debug\net8.0-windows10.0.22621.0\
-
-      - name: test3
-        uses: actions/upload-artifact@v4
-        with:
-          name: test3
-          path: bin\${{ matrix.architecture }}\Debug\net7.0-windows10.0.19041.0\
