@@ -18,7 +18,6 @@ jobs:
       Configuration: Debug
       Packages_DirectoryName: AppPackages
       Packages_Directory: Natsurainko.FluentLauncher\AppPackages
-      SigningKey_Path: SigningKey.pfx
 
     strategy:
       matrix:
@@ -96,3 +95,21 @@ jobs:
         with:
           name: msix-${{ matrix.architecture }}
           path: ${{ steps.preparation.outputs.packageName }}.msix
+
+      - name: test
+        uses: actions/upload-artifact@v4
+        with:
+          name: test
+          path: bin\${{ matrix.architecture }}\Debug\net7.0\
+
+      - name: test2
+        uses: actions/upload-artifact@v4
+        with:
+          name: test2
+          path: bin\${{ matrix.architecture }}\Debug\net8.0-windows10.0.22621.0\
+
+      - name: test3
+        uses: actions/upload-artifact@v4
+        with:
+          name: test3
+          path: bin\${{ matrix.architecture }}\Debug\net7.0-windows10.0.19041.0\
