@@ -8,9 +8,6 @@ on:
         required: false
         type: boolean
         default: true
-    secrets:
-      pfx_base64_encoded:
-        required: false
 
 jobs:
   build:
@@ -92,22 +89,6 @@ jobs:
 
           # Move .msix for upload to artifacts
           mv ${{ env.Packages_Directory }}\*\*.msix "$packageName.msix"
-
-      # Decode the base64 encoded pfx and sign the package
-      - name: Sign .msix
-        if: ${{ inputs.create_package }}
-        run: |
-          # Get signtool.exe
-          $signtool = Get-Item -Path "C:\Program Files (x86)\Windows Kits\10\bin\*\x64\signtool.exe"
-          if ($signtool -is [array]) {
-            $signtool = $signtool[0]
-          }
-
-          # Sign .msix
-          $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.pfx_base64_encoded }}")
-          [IO.File]::WriteAllBytes("${{ env.SigningKey_Path }}", $pfx_cert_byte)
-          & $signtool sign /f "${{ env.SigningKey_Path }}" /fd SHA256 /td SHA256 "${{ steps.preparation.outputs.packageName }}.msix"
-          rm "${{ env.SigningKey_Path }}"
 
       - name: Upload .msix to artifacts
         if: ${{ inputs.create_package }}
