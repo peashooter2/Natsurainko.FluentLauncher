@@ -7,7 +7,7 @@ on:
       create_package:
         required: false
         type: boolean
-        default: false
+        default: true
     secrets:
       pfx_base64_encoded:
         required: true
@@ -18,7 +18,7 @@ jobs:
     env:
       Solution_Name: Natsurainko.FluentLauncher
       Project_Directory: Natsurainko.FluentLauncher
-      Configuration: Release
+      Configuration: Debug
       Packages_DirectoryName: AppPackages
       Packages_Directory: Natsurainko.FluentLauncher\AppPackages
       SigningKey_Path: SigningKey.pfx
@@ -42,17 +42,8 @@ jobs:
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
-
-      # - name: Cache NuGet packages
-      #   id: cache-nuget
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: |
-      #       ~\AppData\Local\NuGet\v3-cache
-      #       ~\AppData\Roaming\NuGet\NuGet.Config
-      #     key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-nuget-
+        with: 
+          vs-prerelease: true
 
       - name: Add NuGet Source for WCT Labs
         # if: steps.cache-nuget.outputs.cache-hit != 'true'
